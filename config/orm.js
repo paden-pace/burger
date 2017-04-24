@@ -16,7 +16,7 @@ var orm = {
             console.log(results);
         });
     }, 
-    updateOne: function(){
+    updateOne: function(tableToUp, setCol, setVal, whereCol, whereVal){
         var queryString = "UPDATE ?? SET ?? = ?? WHERE ?? = ??";
         console.log(queryString);
         connection.query(queryString, [tableToUp, setCol, setVal, whereCol, whereVal], function(err, result) {
