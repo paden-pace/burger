@@ -1,32 +1,46 @@
-var burgerJS = require("./../models/burger.js");
+
 var express = require("express");
 
-var router = function(app){
-    app.get("/api/friends", function(req, res) {
-    //     return res.json(members);
-    });
+var router = express.Router();
 
-    // Create New Member - takes in JSON input
-    app.post("/api/new", function(req, res) {
-        // var newMember = req.body;
-        // members.push(newMember);
-        // res.json(newMember);
-    });
-};
+// Import the model (burger.js) to use its database functions.
+var burger = require("./../models/burger.js");
 
 
+// Create all our routes and set up logic within those routes where required.
+router.get("/", function(req, res) {
+  burger.all(function(data) {
+    var hbsObject = {
+      burgers: data
+    };
+    console.log(hbsObject);
+    res.render("index", hbsObject);
+  });
+});
+
+router.post("/", function(req, res) {
+  burger.create([
+    "burger_name", "devoured"
+  ], [
+    req.body.burger_name, false
+  ], function() {
+    res.redirect("/");
+  });
+});
+
+router.put("/:id", function(req, res) {
+  var condition = "id = " + req.params.id;
+
+  console.log("condition", condition);
+
+  burger.update({
+    devoured: req.body.devoured
+  }, condition, function() {
+    res.redirect("/");
+  });
+});
+
+
+
+// Export routes for server.js to use.
 module.exports = router;
-
-
-
-// var htmlRoutes = function (app) {
-//     app.get("/survey", function(req, res) {
-//         res.sendFile(path.join(__dirname, "./../public/survey.html"));
-//     });
-//     app.get("/", function(req, res){
-//         res.sendFile(path.join(__dirname, "./../public/home.html"));
-//     });
-// };
-
-
-// module.exports = htmlRoutes;
